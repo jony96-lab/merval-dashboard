@@ -14,6 +14,28 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 
+# ─── News Scoring (opcional) ───
+_NEWS_SCORES = None  # cache global de news scores para evitar refetch
+
+def load_news_scores():
+    """Obtiene news scores para todos los tickers."""
+    global _NEWS_SCORES
+    if _NEWS_SCORES is not None:
+        return _NEWS_SCORES  # cache: se refresca cada ejecución
+    try:
+        sys.path.insert(0, os.path.expanduser("~/spikes/001-indicadores-merval"))
+        from news_scorer import score_all, fetch_news
+        headlines = fetch_news()
+        if headlines:
+            scores = score_all(headlines)
+            _NEWS_SCORES = {k.upper(): v["score"] for k, v in scores.items()}
+            print(f"📰 News scoring: {len(_NEWS_SCORES)} tickers sc.")
+            return _NEWS_SCORES
+    except Exception as e:
+        print(f"⚠️ News scoring no disponible: {e}")
+    _NEWS_SCORES = {}
+    return _NEWS_SCORES
+
 # ───────────────────────────────────────────────────────────────
 # TICKERS LÍQUIDOS POR SECTOR (~130 tickers)
 # ───────────────────────────────────────────────────────────────
@@ -135,32 +157,38 @@ RSI_OVERSOLD = 35
 RSI_OVERBOUGHT = 65
 
 
-def get_consolidated_signal(df: pd.DataFrame) -> dict:
-    """Señal V4: RSI_35_65 (70%) + MACD (30%) — la mejor según backtesting."""
+def get_consolidated_signal(df: pd.DataFrame, news_score: int = 0) -> dict:
+    """Señal V4: RSI_35_65 (70%) + MACD (30%) + News Scoring."""
     if df.empty or len(df) < 60:
         return {"señal": "NEUTRO", "score": 0, "confianza": 0,
-                "razón": "Datos insuficientes"}
+                "razón": "Datos insuficientes", "news_score": news_score}
     
     # RSI
     rsi_signal, rsi_score = _calc_rsi_signal(df)
     # MACD
     macd_signal, macd_score = _calc_macd_signal(df)
     
-    # Score ponderado
+    # Score ponderado técnico
     score = rsi_score * 0.7 + macd_score * 0.3
     
     razón = f"RSI({rsi_score}) MACD({macd_score})"
     
+    # Aplicar news scoring como boost/penalty (máximo +/-15 puntos)
+    if news_score != 0:
+        boost = int(news_score * 0.5)  # news_score -30..+30 → boost -15..+15
+        score += boost
+        razón += f" news({news_score:+d})"
+    
     if score >= 50:
-        return {"señal": "COMPRA", "score": round(score, 1), "confianza": min(100, int(abs(score))), "razón": razón}
+        return {"señal": "COMPRA", "score": round(score, 1), "confianza": min(100, int(abs(score))), "razón": razón, "news_score": news_score}
     elif score >= 20:
-        return {"señal": "COMPRA_DÉBIL", "score": round(score, 1), "confianza": min(70, int(abs(score))), "razón": razón}
+        return {"señal": "COMPRA_DÉBIL", "score": round(score, 1), "confianza": min(70, int(abs(score))), "razón": razón, "news_score": news_score}
     elif score <= -50:
-        return {"señal": "VENTA", "score": round(score, 1), "confianza": min(100, int(abs(score))), "razón": razón}
+        return {"señal": "VENTA", "score": round(score, 1), "confianza": min(100, int(abs(score))), "razón": razón, "news_score": news_score}
     elif score <= -20:
-        return {"señal": "VENTA_DÉBIL", "score": round(score, 1), "confianza": min(70, int(abs(score))), "razón": razón}
+        return {"señal": "VENTA_DÉBIL", "score": round(score, 1), "confianza": min(70, int(abs(score))), "razón": razón, "news_score": news_score}
     else:
-        return {"señal": "NEUTRO", "score": round(score, 1), "confianza": max(5, 50 - int(abs(score))), "razón": razón}
+        return {"señal": "NEUTRO", "score": round(score, 1), "confianza": max(5, 50 - int(abs(score))), "razón": razón, "news_score": news_score}
 
 
 def _calc_rsi_signal(df):
@@ -243,7 +271,7 @@ def calculate_market_metrics(df: pd.DataFrame) -> dict:
 # LOG PRINCIPAL
 # ───────────────────────────────────────────────────────────────
 
-def analyze_ticker(ticker: str, period: str = "6mo") -> dict:
+def analyze_ticker(ticker: str, period: str = "6mo", news_score: int = 0) -> dict:
     """Analiza un ticker y devuelve señal + métricas"""
     try:
         df = yf.download(ticker, period=period, progress=False, auto_adjust=True)
@@ -257,7 +285,7 @@ def analyze_ticker(ticker: str, period: str = "6mo") -> dict:
         df = add_all_indicators(df)
 
         metrics = calculate_market_metrics(df)
-        signal = get_consolidated_signal(df)
+        signal = get_consolidated_signal(df, news_score=news_score)
 
         return {
             "ticker": ticker,
@@ -270,6 +298,7 @@ def analyze_ticker(ticker: str, period: str = "6mo") -> dict:
             "rsi": metrics.get("rsi"),
             "volumen": metrics.get("volumen"),
             "from_52w_high": metrics.get("from_52w_high"),
+            "news_score": signal.get("news_score", 0),
         }
     except Exception as e:
         return {"ticker": ticker, "error": str(e)[:100]}
@@ -280,6 +309,13 @@ def run_dashboard():
     print(f"🚀 MERVAL Dashboard — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print(f"📊 Analizando ~130 tickers...")
 
+    # Cargar news scores
+    news_scores = load_news_scores()
+    if news_scores:
+        print(f"📰 {len(news_scores)} tickers con news score")
+        for t, s in sorted(news_scores.items(), key=lambda x: x[1], reverse=True)[:5]:
+            print(f"     {t}: {s:+d}")
+
     all_signals = []
     sector_counts = {}
     total_tickers = 0
@@ -289,7 +325,10 @@ def run_dashboard():
         sector_counts[sector] = {"COMPRA": 0, "COMPRA_DÉBIL": 0, "NEUTRO": 0, "VENTA_DÉBIL": 0, "VENTA": 0, "ERROR": 0}
         for ticker in tickers:
             total_tickers += 1
-            result = analyze_ticker(ticker)
+            # Buscar news_score para este ticker
+            ticker_clean = ticker.replace(".BA", "")
+            ns = news_scores.get(ticker_clean, news_scores.get(ticker, 0))
+            result = analyze_ticker(ticker, news_score=ns)
             result["sector"] = sector
             all_signals.append(result)
 
