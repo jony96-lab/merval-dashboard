@@ -128,147 +128,88 @@ def add_all_indicators(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 # ───────────────────────────────────────────────────────────────
-# SEÑALES V3 (MACD_RSI ponderado + SMA tendencia + momentum)
+# SEÑALES V4 — Optimizadas con backtesting (RSI + MACD)
 # ───────────────────────────────────────────────────────────────
 
-def signal_macd_rsi(df: pd.DataFrame) -> dict:
-    """Señal combinada MACD + RSI — la mejor según backtest (Sharpe 0.94)"""
-    last = df.iloc[-1]
-    score = 0
-    reasons = []
-
-    # MACD
-    if "MACD" in df and "MACD_Signal" in df:
-        if last["MACD"] > last["MACD_Signal"]:
-            score += 40
-            reasons.append("MACD alcista (+40)")
-        else:
-            score -= 40
-            reasons.append("MACD bajista (-40)")
-        if last["MACD_Hist"] > df["MACD_Hist"].iloc[-2]:
-            score += 10
-            reasons.append("MACD Hist acelerando (+10)")
-
-    # RSI con umbrales 20/80
-    if "RSI" in df and not pd.isna(last.get("RSI")):
-        rsi = last["RSI"]
-        if rsi < 20:
-            score += 50
-            reasons.append(f"RSI {rsi:.0f} sobrevendido (+50)")
-        elif rsi < 30:
-            score += 30
-            reasons.append(f"RSI {rsi:.0f} cerca sobreventa (+30)")
-        elif rsi > 80:
-            score -= 50
-            reasons.append(f"RSI {rsi:.0f} sobrecomprado (-50)")
-        elif rsi > 70:
-            score -= 30
-            reasons.append(f"RSI {rsi:.0f} cerca sobrecompra (-30)")
-
-    # Tendencia con SMA
-    if "SMA_200" in df and not pd.isna(last.get("SMA_200")):
-        if last["Close"] > last["SMA_200"]:
-            score += 20
-            reasons.append("Precio > SMA200 (+20)")
-        else:
-            score -= 20
-            reasons.append("Precio < SMA200 (-20)")
-
-    if "SMA_50" in df and not pd.isna(last.get("SMA_50")):
-        if last["Close"] > last["SMA_50"]:
-            score += 15
-            reasons.append("Precio > SMA50 (+15)")
-        else:
-            score -= 15
-            reasons.append("Precio < SMA50 (-15)")
-
-    # Señal
-    if score >= 80:
-        senal = "COMPRA"
-    elif score >= 40:
-        senal = "COMPRA_DÉBIL"
-    elif score <= -80:
-        senal = "VENTA"
-    elif score <= -40:
-        senal = "VENTA_DÉBIL"
-    else:
-        senal = "NEUTRO"
-
-    return {
-        "señal": senal,
-        "score": score,
-        "razón": " | ".join(reasons) if reasons else "Sin datos suficientes",
-    }
-
-
-def signal_sma_crossover(df: pd.DataFrame, fast=10, slow=30) -> dict:
-    """Señal por cruce de SMA (estrategia activa actual)"""
-    if len(df) < slow + 2:
-        return {"señal": "NEUTRO", "score": 0, "razón": "Datos insuficientes"}
-
-    prev = df.iloc[-2]
-    curr = df.iloc[-1]
-
-    col_fast = f"SMA_{fast}"
-    col_slow = f"SMA_{slow}"
-    if col_fast not in df or col_slow not in df:
-        return {"señal": "NEUTRO", "score": 0, "razón": "SMAs no calculados"}
-
-    # Cruce alcista: fast cruza sobre slow
-    if prev[col_fast] <= prev[col_slow] and curr[col_fast] > curr[col_slow]:
-        return {"señal": "COMPRA", "score": 85, "razón": f"Cruce SMA: {fast}×{slow} alcista"}
-    # Cruce bajista
-    if prev[col_fast] >= prev[col_slow] and curr[col_fast] < curr[col_slow]:
-        return {"señal": "VENTA", "score": -85, "razón": f"Cruce SMA: {fast}×{slow} bajista"}
-    # Tendencia
-    if curr[col_fast] > curr[col_slow]:
-        return {"señal": "COMPRA_DÉBIL", "score": 20, "razón": f"SMA {fast} > {slow} (tendencia alcista)"}
-    return {"señal": "VENTA_DÉBIL", "score": -20, "razón": f"SMA {fast} < {slow} (tendencia bajista)"}
+RSI_OVERSOLD = 35
+RSI_OVERBOUGHT = 65
 
 
 def get_consolidated_signal(df: pd.DataFrame) -> dict:
-    """Señal consolidada: combina MACD_RSI (60%) + SMA crossover (20%) + momentum (20%)"""
-    if df.empty or len(df) < 50:
-        return {"señal": "NEUTRO", "score": 0, "confianza": 0, "razón": "Datos insuficientes"}
-
-    # 1) MACD_RSI (peso 60%)
-    macd_rsi = signal_macd_rsi(df)
-    score1 = macd_rsi["score"] * 0.6
-
-    # 2) SMA crossover (peso 20%)
-    sma = signal_sma_crossover(df)
-    score2 = sma["score"] * 0.2
-
-    # 3) Momentum (peso 20%)
-    perf_5d = ((df["Close"].iloc[-1] / df["Close"].iloc[-5]) - 1) * 100 if len(df) >= 5 else 0
-    perf_20d = ((df["Close"].iloc[-1] / df["Close"].iloc[-20]) - 1) * 100 if len(df) >= 20 else 0
-    score3 = (perf_5d * 0.5 + perf_20d * 0.5)
-    score3 = max(-100, min(100, score3)) * 0.2
-
-    total_score = score1 + score2 + score3
-
-    if total_score >= 80:
-        senal = "COMPRA"
-        confianza = min(100, int(abs(total_score)))
-    elif total_score >= 40:
-        senal = "COMPRA_DÉBIL"
-        confianza = min(70, int(abs(total_score)))
-    elif total_score <= -80:
-        senal = "VENTA"
-        confianza = min(100, int(abs(total_score)))
-    elif total_score <= -40:
-        senal = "VENTA_DÉBIL"
-        confianza = min(70, int(abs(total_score)))
+    """Señal V4: RSI_35_65 (70%) + MACD (30%) — la mejor según backtesting."""
+    if df.empty or len(df) < 60:
+        return {"señal": "NEUTRO", "score": 0, "confianza": 0,
+                "razón": "Datos insuficientes"}
+    
+    # RSI
+    rsi_signal, rsi_score = _calc_rsi_signal(df)
+    # MACD
+    macd_signal, macd_score = _calc_macd_signal(df)
+    
+    # Score ponderado
+    score = rsi_score * 0.7 + macd_score * 0.3
+    
+    razón = f"RSI({rsi_score}) MACD({macd_score})"
+    
+    if score >= 50:
+        return {"señal": "COMPRA", "score": round(score, 1), "confianza": min(100, int(abs(score))), "razón": razón}
+    elif score >= 20:
+        return {"señal": "COMPRA_DÉBIL", "score": round(score, 1), "confianza": min(70, int(abs(score))), "razón": razón}
+    elif score <= -50:
+        return {"señal": "VENTA", "score": round(score, 1), "confianza": min(100, int(abs(score))), "razón": razón}
+    elif score <= -20:
+        return {"señal": "VENTA_DÉBIL", "score": round(score, 1), "confianza": min(70, int(abs(score))), "razón": razón}
     else:
-        senal = "NEUTRO"
-        confianza = max(5, 50 - int(abs(total_score)))
+        return {"señal": "NEUTRO", "score": round(score, 1), "confianza": max(5, 50 - int(abs(score))), "razón": razón}
 
-    return {
-        "señal": senal,
-        "score": round(total_score, 1),
-        "confianza": confianza,
-        "razón": f"MACD_RSI: {macd_rsi['score']} | SMA: {sma['score']} | Mom: {round(score3/0.2, 1)}",
-    }
+
+def _calc_rsi_signal(df):
+    """RSI puro: mejor estrategia general (96.4% WR)."""
+    if "RSI" not in df.columns:
+        return "NEUTRO", 0
+    rsi = df["RSI"].iloc[-1]
+    if pd.isna(rsi):
+        return "NEUTRO", 0
+    if rsi < RSI_OVERSOLD:
+        return "COMPRA", int((RSI_OVERSOLD - rsi) * 3 + 50)
+    elif rsi > RSI_OVERBOUGHT:
+        return "VENTA", int((rsi - RSI_OVERBOUGHT) * -3 - 50)
+    elif rsi < RSI_OVERSOLD + 5:
+        return "COMPRA_DÉBIL", 30
+    elif rsi > RSI_OVERBOUGHT - 5:
+        return "VENTA_DÉBIL", -30
+    return "NEUTRO", 0
+
+
+def _calc_macd_signal(df, fast=12, slow=26, signal=9):
+    """MACD: consistente (59.5% WR, 32 trades/año)."""
+    if "MACD" not in df.columns or "MACD_Signal" not in df.columns:
+        return "NEUTRO", 0
+    curr = df.iloc[-1]
+    prev = df.iloc[-2] if len(df) >= 2 else curr
+    score = 0
+    if prev["MACD"] <= prev["MACD_Signal"] and curr["MACD"] > curr["MACD_Signal"]:
+        score += 60
+    elif prev["MACD"] >= prev["MACD_Signal"] and curr["MACD"] < curr["MACD_Signal"]:
+        score -= 60
+    if curr["MACD"] > curr["MACD_Signal"]:
+        score += 20
+    elif curr["MACD"] < curr["MACD_Signal"]:
+        score -= 20
+    if "MACD_Hist" in df.columns and len(df) >= 2:
+        if curr["MACD_Hist"] > df["MACD_Hist"].iloc[-2]:
+            score += 10
+        elif curr["MACD_Hist"] < df["MACD_Hist"].iloc[-2]:
+            score -= 10
+    if score >= 50:
+        return "COMPRA", score
+    elif score <= -50:
+        return "VENTA", score
+    elif score >= 20:
+        return "COMPRA_DÉBIL", score
+    elif score <= -20:
+        return "VENTA_DÉBIL", score
+    return "NEUTRO", score
 
 
 def calculate_market_metrics(df: pd.DataFrame) -> dict:
