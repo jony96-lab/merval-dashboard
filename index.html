@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>📊 MERVAL Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #0d1117; --card: #161b22; --border: #30363d;
+  --text: #c9d1d9; --muted: #8b949e; --accent: #58a6ff;
+  --green: #3fb950; --red: #f85149; --yellow: #d29922;
+  --green-bg: #1b3a2d; --red-bg: #3a1b1b;
+}
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); padding: 12px; }
+.header { background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460); padding: 16px 20px; border-radius: 12px; margin-bottom: 12px; }
+.header h1 { font-size: 1.3em; color: var(--accent); }
+.header .sub { color: var(--muted); font-size: 0.8em; margin-top: 4px; }
+.stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px; text-align: center; }
+.stat-card .val { font-size: 1.6em; font-weight: 700; }
+.stat-card .lbl { color: var(--muted); font-size: 0.7em; margin-top: 2px; text-transform: uppercase; }
+.green { color: var(--green); } .red { color: var(--red); } .yellow { color: var(--yellow); } .accent { color: var(--accent); }
+.filters { display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+.filter-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 6px 14px; border-radius: 16px; font-size: 0.8em; cursor: pointer; flex-shrink: 0; }
+.filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.filter-btn:hover { background: #21262d; }
+.filter-btn.active:hover { background: #1f6feb; }
+.chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.chart-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px; }
+.chart-card h3 { font-size: 0.85em; color: var(--accent); margin-bottom: 8px; }
+.signals-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 10px; overflow: hidden; margin-bottom: 40px; font-size: 0.85em; }
+.signals-table th { background: #21262d; padding: 8px 10px; text-align: left; font-weight: 600; color: var(--muted); text-transform: uppercase; font-size: 0.75em; letter-spacing: 0.5px; }
+.signals-table td { padding: 8px 10px; border-top: 1px solid var(--border); }
+.signals-table tr:active { background: #1c2128; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.75em; font-weight: 600; }
+.badge-COMPRA { background: var(--green-bg); color: var(--green); }
+.badge-COMPRA_DÉBIL { background: var(--green-bg); color: #7ee787; }
+.badge-VENTA { background: var(--red-bg); color: var(--red); }
+.badge-VENTA_DÉBIL { background: var(--red-bg); color: #ffa198; }
+.badge-NEUTRO { background: #21262d; color: var(--muted); }
+.badge-ERROR { background: #3a1b1b; color: #ffa198; }
+.score-bar { height: 4px; border-radius: 2px; margin-top: 3px; max-width: 100px; }
+.up { color: var(--green); } .down { color: var(--red); }
+.section-title { font-size: 1em; color: var(--accent); margin: 16px 0 8px; display: flex; align-items: center; gap: 8px; }
+.last-update { text-align: center; color: var(--muted); font-size: 0.75em; margin-bottom: 16px; }
+.last-update .err { color: var(--red); }
+.status-bar { text-align: center; padding: 8px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; font-size: 0.8em; }
+.status-bar.loading { color: var(--yellow); }
+.status-bar.error { color: var(--red); }
+.status-bar.ok { color: var(--green); }
+.top-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.top-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px; }
+.top-card h3 { font-size: 0.85em; margin-bottom: 6px; }
+.top-item { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: 0.8em; border-bottom: 1px solid #21262d; }
+.top-item:last-child { border-bottom: none; }
+.top-item .tkr { font-weight: 600; }
+.empty-state { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 0.9em; }
+@media (max-width: 480px) { body { padding: 8px; } .stats { gap: 6px; } .stat-card { padding: 10px; } .stat-card .val { font-size: 1.3em; } .signals-table { font-size: 0.8em; } .signals-table th, .signals-table td { padding: 6px 8px; } .top-list { grid-template-columns: 1fr; } .chart-row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📊 MERVAL Dashboard</h1>
+  <div class="sub" id="subtitle">Cargando...</div>
+</div>
+
+<div class="status-bar" id="statusBar">⏳ Cargando datos...</div>
+
+<div class="stats" id="statsRow"></div>
+
+<div class="section-title">📈 Top del día</div>
+<div class="top-list" id="topList"></div>
+
+<div class="chart-row" id="chartRow">
+  <div class="chart-card"><h3>📊 Señales por sector</h3><canvas id="sectorChart"></canvas></div>
+  <div class="chart-card"><h3>🥧 Distribución general</h3><canvas id="pieChart"></div>
+</div>
+
+<div class="section-title">📋 Señales <span style="font-size:0.7em;color:var(--muted);font-weight:400;" id="filterLabel">— Todos los sectores</span></div>
+<div class="filters" id="filtersRow"></div>
+
+<div style="overflow-x:auto;">
+<table class="signals-table" id="signalsTable">
+<thead><tr>
+  <th>Ticker</th><th>Sector</th><th>Señal</th><th>Score</th><th>Conf</th><th>Precio</th><th>Δ%</th><th>RSI</th>
+</tr></thead>
+<tbody id="signalsBody"></tbody>
+</table>
+</div>
+
+<div class="last-update" id="lastUpdate"></div>
+
+<script>
+let allData = null;
+let sectorChart = null;
+let pieChart = null;
+let activeFilter = 'ALL';
+
+const SECTOR_NAMES = {
+  'QQQ': 'NASDAQ Tec',
+  'XLF': 'Financiero',
+  'XLE': 'Energía',
+  'XLV': 'Salud',
+  'XLP': 'Consumo',
+  'GDX': 'Minería/Commodities',
+  'ARKK': 'Innovación/Crypto',
+  'EEM': 'Emergentes',
+  'SPY': 'General',
+  'LOCAL_ADR': '🇦🇷 Locales ADR',
+  'LOCAL_PURO': '🇦🇷 Locales BYMA',
+};
+
+function loadData() {
+  const statusBar = document.getElementById('statusBar');
+  statusBar.className = 'status-bar loading';
+  statusBar.textContent = '⏳ Cargando señales...';
+
+  fetch('signals.json?t=' + Date.now())
+    .then(r => {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(data => {
+      allData = data;
+      statusBar.className = 'status-bar ok';
+      statusBar.textContent = `✅ ${data.stats.total} tickers analizados`;
+      render();
+    })
+    .catch(err => {
+      statusBar.className = 'status-bar error';
+      statusBar.textContent = '❌ Error al cargar datos: ' + err.message;
+      document.getElementById('subtitle').textContent = '⚠️ Sin conexión';
+    });
+}
+
+function render() {
+  if (!allData) return;
+
+  const data = allData;
+
+  // Subtitle
+  document.getElementById('subtitle').textContent =
+    `🕐 ${data.generated_at_art} — 🟢${data.stats.compras} Compras · 🔴${data.stats.ventas} Ventas · ⚪${data.stats.neutros} Neutros`;
+
+  // Stats row
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat-card">
+      <div class="val green">${data.stats.compras}</div>
+      <div class="lbl">🟢 Compras</div>
+    </div>
+    <div class="stat-card">
+      <div class="val yellow">${data.stats.neutros}</div>
+      <div class="lbl">⚪ Neutros</div>
+    </div>
+    <div class="stat-card">
+      <div class="val red">${data.stats.ventas}</div>
+      <div class="lbl">🔴 Ventas</div>
+    </div>
+  `;
+
+  // Top list
+  renderTopList(data);
+
+  // Charts
+  renderCharts(data);
+
+  // Filters
+  renderFilters(data);
+
+  // Table
+  renderTable(data, 'ALL');
+
+  // Last update
+  document.getElementById('lastUpdate').innerHTML =
+    `🕐 Última actualización: ${data.generated_at_art} · Próxima: ~${(new Date().getHours() + 1) % 24}:00`;
+}
+
+function renderTopList(data) {
+  const topCompras = data.top_compras || [];
+  const topVentas = data.top_ventas || [];
+
+  document.getElementById('topList').innerHTML = `
+    <div class="top-card">
+      <h3 class="green">🏆 Mejores Compras</h3>
+      ${topCompras.length === 0 ? '<div class="empty-state">Sin señales de compra</div>' :
+        topCompras.slice(0, 5).map(s => `
+          <div class="top-item">
+            <span class="tkr">${s.ticker.replace('.BA','')}</span>
+            <span class="${s.cambio_pct > 0 ? 'up' : 'down'}">${s.precio ? '$' + s.precio : '-'}</span>
+          </div>
+        `).join('')
+      }
+    </div>
+    <div class="top-card">
+      <h3 class="red">⚠️ Peores Ventas</h3>
+      ${topVentas.length === 0 ? '<div class="empty-state">Sin señales de venta</div>' :
+        topVentas.slice(0, 5).map(s => `
+          <div class="top-item">
+            <span class="tkr">${s.ticker.replace('.BA','')}</span>
+            <span class="${s.cambio_pct > 0 ? 'up' : 'down'}">${s.precio ? '$' + s.precio : '-'}</span>
+          </div>
+        `).join('')
+      }
+    </div>
+  `;
+}
+
+function renderCharts(data) {
+  const sectors = Object.keys(data.sector_counts || {});
+
+  // Sector chart
+  const ctx1 = document.getElementById('sectorChart').getContext('2d');
+  if (sectorChart) sectorChart.destroy();
+
+  const labels = sectors.map(s => SECTOR_NAMES[s] || s);
+  const comprasData = sectors.map(s => (data.sector_counts[s].COMPRA || 0) + (data.sector_counts[s].COMPRA_DÉBIL || 0));
+  const neuData = sectors.map(s => data.sector_counts[s].NEUTRO || 0);
+  const ventasData = sectors.map(s => (data.sector_counts[s].VENTA || 0) + (data.sector_counts[s].VENTA_DÉBIL || 0));
+
+  sectorChart = new Chart(ctx1, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: '🟢 Compras', data: comprasData, backgroundColor: '#3fb95080', borderColor: '#3fb950', borderWidth: 1 },
+        { label: '⚪ Neutro', data: neuData, backgroundColor: '#8b949e80', borderColor: '#8b949e', borderWidth: 1 },
+        { label: '🔴 Ventas', data: ventasData, backgroundColor: '#f8514980', borderColor: '#f85149', borderWidth: 1 },
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: { legend: { labels: { color: '#c9d1d9', font: { size: 10 } } } },
+      scales: {
+        x: { ticks: { color: '#8b949e', font: { size: 9 }, maxRotation: 45 }, grid: { display: false } },
+        y: { ticks: { color: '#8b949e', font: { size: 9 } }, grid: { color: '#21262d' }, beginAtZero: true }
+      }
+    }
+  });
+
+  // Pie chart
+  const ctx2 = document.getElementById('pieChart').getContext('2d');
+  if (pieChart) pieChart.destroy();
+
+  const total = data.stats.compras + data.stats.ventas + data.stats.neutros;
+  pieChart = new Chart(ctx2, {
+    type: 'doughnut',
+    data: {
+      labels: ['🟢 Compras', '⚪ Neutro', '🔴 Ventas'],
+      datasets: [{
+        data: [data.stats.compras, data.stats.neutros, data.stats.ventas],
+        backgroundColor: ['#3fb95080', '#8b949e80', '#f8514980'],
+        borderColor: ['#3fb950', '#8b949e', '#f85149'],
+        borderWidth: 1,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { labels: { color: '#c9d1d9', font: { size: 10 } } },
+        tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.parsed} (${(ctx.parsed / total * 100).toFixed(1)}%)` } }
+      }
+    }
+  });
+}
+
+function renderFilters(data) {
+  const sectors = Object.keys(data.sector_counts || {});
+  const container = document.getElementById('filtersRow');
+  container.innerHTML = `<button class="filter-btn ${activeFilter === 'ALL' ? 'active' : ''}" onclick="setFilter('ALL')">📋 Todos</button>` +
+    sectors.map(s => `<button class="filter-btn ${activeFilter === s ? 'active' : ''}" onclick="setFilter('${s}')">${SECTOR_NAMES[s] || s}</button>`).join('');
+}
+
+function setFilter(sector) {
+  activeFilter = sector;
+  renderFilters(allData);
+  renderTable(allData, sector);
+  document.getElementById('filterLabel').textContent = sector === 'ALL' ? '— Todos los sectores' : `— ${SECTOR_NAMES[sector] || sector}`;
+}
+
+function renderTable(data, sector) {
+  let signals = data.signals || [];
+
+  if (sector !== 'ALL') {
+    signals = signals.filter(s => s.sector === sector);
+  }
+
+  const tbody = document.getElementById('signalsBody');
+
+  if (signals.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--muted)">Sin señales para este sector</td></tr>';
+    return;
+  }
+
+  // Sort: COMPRA first, then by score descending
+  const order = { 'COMPRA': 0, 'COMPRA_DÉBIL': 1, 'NEUTRO': 2, 'VENTA_DÉBIL': 3, 'VENTA': 4, 'ERROR': 5 };
+  signals.sort((a, b) => {
+    const oa = order[a.señal] ?? 5;
+    const ob = order[b.señal] ?? 5;
+    if (oa !== ob) return oa - ob;
+    return (b.score || 0) - (a.score || 0);
+  });
+
+  tbody.innerHTML = signals.map(s => {
+    const ticker = s.ticker ? s.ticker.replace('.BA', '') : '?';
+    const senal = s.señal || 'ERROR';
+    const score = s.score != null ? s.score : '-';
+    const conf = s.confianza != null ? s.confianza + '%' : '-';
+    const precio = s.precio != null ? '$' + s.precio.toLocaleString() : '-';
+    const cambio = s.cambio_pct != null ? (s.cambio_pct > 0 ? '+' : '') + s.cambio_pct.toFixed(2) + '%' : '-';
+    const cambioClass = s.cambio_pct != null ? (s.cambio_pct > 0 ? 'up' : s.cambio_pct < 0 ? 'down' : '') : '';
+    const rsi = s.rsi != null ? s.rsi.toFixed(1) : '-';
+    const sectorName = SECTOR_NAMES[s.sector] || s.sector || '-';
+    const scoreWidth = Math.min(100, Math.abs(score));
+
+    return `<tr>
+      <td><strong>${ticker}</strong></td>
+      <td style="font-size:0.75em;color:var(--muted)">${sectorName}</td>
+      <td><span class="badge badge-${senal}">${senal}</span></td>
+      <td>${score}<div class="score-bar" style="width:${scoreWidth}px;background:${score >= 0 ? 'var(--green)' : 'var(--red)'}"></div></td>
+      <td>${conf}</td>
+      <td>${precio}</td>
+      <td class="${cambioClass}">${cambio}</td>
+      <td>${rsi}</td>
+    </tr>`;
+  }).join('');
+}
+
+// Auto-refresh cada 5 minutos
+loadData();
+setInterval(loadData, 300000);
+</script>
+</body>
+</html>

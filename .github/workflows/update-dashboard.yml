@@ -1,0 +1,39 @@
+name: MERVAL Dashboard
+
+on:
+  schedule:
+    - cron: "0 14 * * 1-5"   # 11:00 ART
+    - cron: "0 15 * * 1-5"   # 12:00 ART
+    - cron: "0 16 * * 1-5"   # 13:00 ART
+    - cron: "0 17 * * 1-5"   # 14:00 ART
+    - cron: "0 18 * * 1-5"   # 15:00 ART
+    - cron: "0 19 * * 1-5"   # 16:00 ART
+    - cron: "0 20 * * 1-5"   # 17:00 ART cierre
+    - cron: "30 20 * * 1-5"  # 17:30 ART post
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      - run: |
+          pip install -q --upgrade pip
+          pip install -q -r requirements.txt
+      - run: python gh_action_dashboard.py
+        env:
+          OUTPUT_PATH: signals.json
+      - run: test -f signals.json && echo "OK" || exit 1
+      - uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          publish_branch: gh-pages
+          keep_files: false
