@@ -27,7 +27,8 @@ LIQUID_TICKERS_BY_SECTOR = {
         "PINS.BA", "SNAP.BA", "RBLX.BA", "IBM.BA", "NOW.BA", "SAP.BA",
         "NKE.BA", "ABNB.BA", "ETSY.BA", "INFY.BA", "BKNG.BA", "ACN.BA",
         "MRVL.BA", "SPOT.BA", "CSCO.BA", "PANW.BA", "SWKS.BA", "LRCX.BA",
-        "ADI.BA", "EA.BA", "ROKU.BA", "GRMN.BA", "VRSN.BA", "MSI.BA",
+            "ADI.BA", "EA.BA", "ROKU.BA", "GRMN.BA", "VRSN.BA", "MSI.BA",
+            "ASTS.BA", "XROX.BA", "BB.BA",
     ],
     "XLF": [
         "JPM.BA", "V.BA", "BRKB.BA", "PYPL.BA", "MELI.BA", "GGAL.BA",
@@ -53,10 +54,12 @@ LIQUID_TICKERS_BY_SECTOR = {
     ],
     "ARKK": [
         "IBIT.BA", "MSTR.BA", "ETHA.BA", "NIO.BA", "COIN.BA", "UPST.BA",
+        "SPCE.BA", "HUT.BA", "OKLO.BA",
     ],
     "EEM": [
         "BABA.BA", "JD.BA", "BIDU.BA", "PETR3.BA", "BAK.BA",
         "BBDC3.BA", "BBAS3.BA",
+        "JOYY.BA",
     ],
     "SPY": [
         "TECO2.BA", "AAL.BA", "UNH.BA", "DISN.BA", "DOW.BA",
