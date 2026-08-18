@@ -1,52 +1,52 @@
 {
-  "generated_at": "2026-08-18T20:31:14.061469",
-  "generated_at_art": "2026-08-18 17:31:14",
+  "generated_at": "2026-08-18T20:49:38.999193",
+  "generated_at_art": "2026-08-18 17:49:38",
   "stats": {
     "total": 206,
     "compras": 66,
-    "ventas": 28,
-    "neutros": 51,
+    "ventas": 26,
+    "neutros": 53,
     "errores": 0,
     "compras_fuertes": 54,
-    "ventas_fuertes": 21
+    "ventas_fuertes": 18
   },
   "sector_counts": {
     "QQQ": {
-      "COMPRA": 2,
+      "COMPRA": 3,
       "COMPRA_DÉBIL": 1,
-      "NEUTRO": 15,
-      "VENTA_DÉBIL": 3,
-      "VENTA": 9,
-      "ERROR": 27
+      "NEUTRO": 17,
+      "VENTA_DÉBIL": 5,
+      "VENTA": 8,
+      "ERROR": 23
     },
     "XLF": {
-      "COMPRA": 8,
+      "COMPRA": 9,
       "COMPRA_DÉBIL": 0,
-      "NEUTRO": 11,
+      "NEUTRO": 12,
       "VENTA_DÉBIL": 0,
       "VENTA": 0,
-      "ERROR": 6
+      "ERROR": 4
     },
     "XLE": {
       "COMPRA": 5,
       "COMPRA_DÉBIL": 0,
       "NEUTRO": 4,
       "VENTA_DÉBIL": 1,
-      "VENTA": 4,
-      "ERROR": 3
+      "VENTA": 3,
+      "ERROR": 4
     },
     "XLV": {
       "COMPRA": 1,
       "COMPRA_DÉBIL": 0,
       "NEUTRO": 2,
-      "VENTA_DÉBIL": 1,
+      "VENTA_DÉBIL": 0,
       "VENTA": 2,
-      "ERROR": 0
+      "ERROR": 1
     },
     "XLP": {
       "COMPRA": 2,
-      "COMPRA_DÉBIL": 2,
-      "NEUTRO": 5,
+      "COMPRA_DÉBIL": 1,
+      "NEUTRO": 6,
       "VENTA_DÉBIL": 0,
       "VENTA": 0,
       "ERROR": 1
@@ -62,26 +62,26 @@
     "ARKK": {
       "COMPRA": 0,
       "COMPRA_DÉBIL": 0,
-      "NEUTRO": 1,
+      "NEUTRO": 0,
       "VENTA_DÉBIL": 0,
       "VENTA": 1,
-      "ERROR": 7
+      "ERROR": 8
     },
     "EEM": {
-      "COMPRA": 4,
+      "COMPRA": 2,
       "COMPRA_DÉBIL": 0,
       "NEUTRO": 0,
       "VENTA_DÉBIL": 1,
       "VENTA": 0,
-      "ERROR": 3
+      "ERROR": 5
     },
     "SPY": {
       "COMPRA": 0,
       "COMPRA_DÉBIL": 1,
       "NEUTRO": 2,
       "VENTA_DÉBIL": 0,
-      "VENTA": 1,
-      "ERROR": 3
+      "VENTA": 0,
+      "ERROR": 4
     },
     "LOCAL_ADR": {
       "COMPRA": 11,
@@ -93,8 +93,8 @@
     },
     "LOCAL_PURO": {
       "COMPRA": 20,
-      "COMPRA_DÉBIL": 7,
-      "NEUTRO": 10,
+      "COMPRA_DÉBIL": 8,
+      "NEUTRO": 9,
       "VENTA_DÉBIL": 1,
       "VENTA": 3,
       "ERROR": 4
@@ -110,7 +110,7 @@
       "precio": 25320.0,
       "cambio_pct": -2.39,
       "rsi": 77.1,
-      "volumen": 345353,
+      "volumen": 345373,
       "from_52w_high": -6.5,
       "news_score": 0,
       "sector": "QQQ"
@@ -372,35 +372,26 @@
     },
     {
       "ticker": "TEAM.BA",
-      "señal": "VENTA",
-      "score": -106,
-      "confianza": 100,
-      "razón": "RSI(-106)",
-      "precio": 5470.0,
-      "cambio_pct": 1.02,
-      "rsi": 83.7,
-      "volumen": 11592,
-      "from_52w_high": -3.27,
-      "news_score": 0,
-      "sector": "QQQ"
-    },
-    {
-      "ticker": "AI.BA",
       "error": "Sin datos suficientes",
       "sector": "QQQ"
     },
     {
-      "ticker": "PATH.BA",
-      "señal": "VENTA",
-      "score": -73,
-      "confianza": 73,
-      "razón": "RSI(-73)",
-      "precio": 12300.0,
-      "cambio_pct": -2.15,
-      "rsi": 72.9,
-      "volumen": 5336,
-      "from_52w_high": -6.89,
+      "ticker": "AI.BA",
+      "señal": "VENTA_DÉBIL",
+      "score": -30,
+      "confianza": 30,
+      "razón": "RSI(-30)",
+      "precio": 3087.5,
+      "cambio_pct": -0.4,
+      "rsi": 62.4,
+      "volumen": 6099,
+      "from_52w_high": -12.54,
       "news_score": 0,
+      "sector": "QQQ"
+    },
+    {
+      "ticker": "PATH.BA",
+      "error": "Sin datos suficientes",
       "sector": "QQQ"
     },
     {
@@ -434,7 +425,16 @@
     },
     {
       "ticker": "RBLX.BA",
-      "error": "Sin datos suficientes",
+      "señal": "COMPRA",
+      "score": 82,
+      "confianza": 82,
+      "razón": "RSI(82)",
+      "precio": 29720.0,
+      "cambio_pct": -0.87,
+      "rsi": 24.3,
+      "volumen": 10851,
+      "from_52w_high": -43.74,
+      "news_score": 0,
       "sector": "QQQ"
     },
     {
@@ -545,7 +545,7 @@
       "razón": "RSI(0)",
       "precio": 35160.0,
       "cambio_pct": -0.06,
-      "rsi": 42.5,
+      "rsi": 43.9,
       "volumen": 5025,
       "from_52w_high": -11.08,
       "news_score": 0,
@@ -553,12 +553,30 @@
     },
     {
       "ticker": "PANW.BA",
-      "error": "Sin datos suficientes",
+      "señal": "VENTA",
+      "score": -62,
+      "confianza": 62,
+      "razón": "RSI(-62)",
+      "precio": 11770.0,
+      "cambio_pct": -2.08,
+      "rsi": 69.3,
+      "volumen": 3541,
+      "from_52w_high": -7.1,
+      "news_score": 0,
       "sector": "QQQ"
     },
     {
       "ticker": "SWKS.BA",
-      "error": "Sin datos suficientes",
+      "señal": "NEUTRO",
+      "score": 0,
+      "confianza": 50,
+      "razón": "RSI(0)",
+      "precio": 4912.5,
+      "cambio_pct": -3.68,
+      "rsi": 50.5,
+      "volumen": 108,
+      "from_52w_high": -19.47,
+      "news_score": 0,
       "sector": "QQQ"
     },
     {
@@ -587,7 +605,16 @@
     },
     {
       "ticker": "ROKU.BA",
-      "error": "Sin datos suficientes",
+      "señal": "VENTA",
+      "score": -95,
+      "confianza": 95,
+      "razón": "RSI(-95)",
+      "precio": 19190.0,
+      "cambio_pct": 0.37,
+      "rsi": 80.2,
+      "volumen": 222,
+      "from_52w_high": -1.24,
+      "news_score": 0,
       "sector": "QQQ"
     },
     {
@@ -620,13 +647,13 @@
     },
     {
       "ticker": "MSI.BA",
-      "señal": "VENTA",
-      "score": -55,
-      "confianza": 55,
-      "razón": "RSI(-55)",
+      "señal": "VENTA_DÉBIL",
+      "score": -30,
+      "confianza": 30,
+      "razón": "RSI(-30)",
       "precio": 36940.0,
       "cambio_pct": 0.76,
-      "rsi": 66.8,
+      "rsi": 61.8,
       "volumen": 156,
       "from_52w_high": -5.18,
       "news_score": 0,
@@ -653,7 +680,16 @@
     },
     {
       "ticker": "BB.BA",
-      "error": "Sin datos suficientes",
+      "señal": "NEUTRO",
+      "score": 0,
+      "confianza": 50,
+      "razón": "RSI(0)",
+      "precio": 4482.5,
+      "cambio_pct": -3.45,
+      "rsi": 56.4,
+      "volumen": 6174,
+      "from_52w_high": -37.13,
+      "news_score": 0,
       "sector": "QQQ"
     },
     {
@@ -798,12 +834,30 @@
     },
     {
       "ticker": "BX.BA",
-      "error": "Sin datos suficientes",
+      "señal": "NEUTRO",
+      "score": 0,
+      "confianza": 50,
+      "razón": "RSI(0)",
+      "precio": 7370.0,
+      "cambio_pct": -2.32,
+      "rsi": 55.8,
+      "volumen": 2020,
+      "from_52w_high": -7.12,
+      "news_score": 0,
       "sector": "XLF"
     },
     {
       "ticker": "STNE.BA",
-      "error": "Sin datos suficientes",
+      "señal": "COMPRA",
+      "score": 93,
+      "confianza": 93,
+      "razón": "RSI(93)",
+      "precio": 4817.5,
+      "cambio_pct": -4.03,
+      "rsi": 20.5,
+      "volumen": 27789,
+      "from_52w_high": -32.82,
+      "news_score": 0,
       "sector": "XLF"
     },
     {
@@ -982,16 +1036,7 @@
     },
     {
       "ticker": "OXY.BA",
-      "señal": "VENTA",
-      "score": -52,
-      "confianza": 52,
-      "razón": "RSI(-52)",
-      "precio": 18830.0,
-      "cambio_pct": 2.67,
-      "rsi": 65.8,
-      "volumen": 7250,
-      "from_52w_high": -5.08,
-      "news_score": 0,
+      "error": "Sin datos suficientes",
       "sector": "XLE"
     },
     {
@@ -1013,7 +1058,7 @@
       "precio": 7990.0,
       "cambio_pct": 1.65,
       "rsi": 51.0,
-      "volumen": 3632058,
+      "volumen": 3632078,
       "from_52w_high": -8.4,
       "news_score": 0,
       "sector": "XLE"
@@ -1157,7 +1202,7 @@
       "razón": "RSI(0)",
       "precio": 750.0,
       "cambio_pct": -1.32,
-      "rsi": 41.8,
+      "rsi": 42.2,
       "volumen": 51333,
       "from_52w_high": -15.25,
       "news_score": 0,
@@ -1221,16 +1266,7 @@
     },
     {
       "ticker": "MRNA.BA",
-      "señal": "VENTA_DÉBIL",
-      "score": -30,
-      "confianza": 30,
-      "razón": "RSI(-30)",
-      "precio": 5210.0,
-      "cambio_pct": -0.29,
-      "rsi": 64.3,
-      "volumen": 21275,
-      "from_52w_high": -27.74,
-      "news_score": 0,
+      "error": "Sin datos suficientes",
       "sector": "XLV"
     },
     {
@@ -1333,13 +1369,13 @@
     },
     {
       "ticker": "KMB.BA",
-      "señal": "COMPRA_DÉBIL",
-      "score": 30,
-      "confianza": 30,
-      "razón": "RSI(30)",
+      "señal": "NEUTRO",
+      "score": 0,
+      "confianza": 50,
+      "razón": "RSI(0)",
       "precio": 28400.0,
       "cambio_pct": -2.14,
-      "rsi": 37.7,
+      "rsi": 40.9,
       "volumen": 3660,
       "from_52w_high": -7.61,
       "news_score": 0,
@@ -1477,16 +1513,7 @@
     },
     {
       "ticker": "OKLO.BA",
-      "señal": "NEUTRO",
-      "score": 0,
-      "confianza": 50,
-      "razón": "RSI(0)",
-      "precio": 2343.0,
-      "cambio_pct": -7.02,
-      "rsi": 52.4,
-      "volumen": 99560,
-      "from_52w_high": -45.19,
-      "news_score": 0,
+      "error": "Sin datos suficientes",
       "sector": "ARKK"
     },
     {
@@ -1543,30 +1570,12 @@
     },
     {
       "ticker": "BBDC3.BA",
-      "señal": "COMPRA",
-      "score": 95,
-      "confianza": 95,
-      "razón": "RSI(95)",
-      "precio": 4310.0,
-      "cambio_pct": -0.92,
-      "rsi": 20.0,
-      "volumen": 1042,
-      "from_52w_high": -22.55,
-      "news_score": 0,
+      "error": "Sin datos suficientes",
       "sector": "EEM"
     },
     {
       "ticker": "BBAS3.BA",
-      "señal": "COMPRA",
-      "score": 81,
-      "confianza": 81,
-      "razón": "RSI(81)",
-      "precio": 2717.5,
-      "cambio_pct": -1.27,
-      "rsi": 24.5,
-      "volumen": 4136,
-      "from_52w_high": -31.94,
-      "news_score": 0,
+      "error": "Sin datos suficientes",
       "sector": "EEM"
     },
     {
@@ -1619,16 +1628,7 @@
     },
     {
       "ticker": "RACE.BA",
-      "señal": "VENTA",
-      "score": -62,
-      "confianza": 62,
-      "razón": "RSI(-62)",
-      "precio": 7835.0,
-      "cambio_pct": -0.13,
-      "rsi": 69.1,
-      "volumen": 4918,
-      "from_52w_high": -1.2,
-      "news_score": 0,
+      "error": "Sin datos suficientes",
       "sector": "SPY"
     },
     {
@@ -1668,7 +1668,7 @@
       "precio": 7990.0,
       "cambio_pct": 1.65,
       "rsi": 51.0,
-      "volumen": 3632058,
+      "volumen": 3632078,
       "from_52w_high": -8.4,
       "news_score": 0,
       "sector": "LOCAL_ADR"
@@ -1850,7 +1850,7 @@
       "razón": "RSI(0)",
       "precio": 695.0,
       "cambio_pct": -4.53,
-      "rsi": 55.4,
+      "rsi": 54.4,
       "volumen": 1222984,
       "from_52w_high": -10.78,
       "news_score": 0,
@@ -2051,7 +2051,7 @@
       "razón": "RSI(0)",
       "precio": 750.0,
       "cambio_pct": -1.32,
-      "rsi": 41.8,
+      "rsi": 42.2,
       "volumen": 51333,
       "from_52w_high": -15.25,
       "news_score": 0,
@@ -2163,7 +2163,7 @@
       "razón": "RSI(0)",
       "precio": 450.0,
       "cambio_pct": -3.23,
-      "rsi": 47.4,
+      "rsi": 41.3,
       "volumen": 2342,
       "from_52w_high": -16.04,
       "news_score": 0,
@@ -2199,13 +2199,13 @@
     },
     {
       "ticker": "INTR.BA",
-      "señal": "NEUTRO",
-      "score": 0,
-      "confianza": 50,
-      "razón": "RSI(0)",
+      "señal": "COMPRA_DÉBIL",
+      "score": 30,
+      "confianza": 30,
+      "razón": "RSI(30)",
       "precio": 273.0,
       "cambio_pct": -2.5,
-      "rsi": 46.9,
+      "rsi": 39.0,
       "volumen": 5607,
       "from_52w_high": -36.51,
       "news_score": 0,
@@ -2220,7 +2220,7 @@
       "precio": 410.0,
       "cambio_pct": -1.68,
       "rsi": 27.4,
-      "volumen": 58205,
+      "volumen": 58305,
       "from_52w_high": -25.18,
       "news_score": 0,
       "sector": "LOCAL_PURO"
@@ -2270,12 +2270,12 @@
     {
       "ticker": "PATA.BA",
       "señal": "COMPRA",
-      "score": 102,
+      "score": 109,
       "confianza": 100,
-      "razón": "RSI(102)",
+      "razón": "RSI(109)",
       "precio": 1165.0,
       "cambio_pct": -1.69,
-      "rsi": 17.6,
+      "rsi": 15.2,
       "volumen": 5337,
       "from_52w_high": -19.1,
       "news_score": 0,
@@ -2581,20 +2581,6 @@
   ],
   "top_ventas": [
     {
-      "ticker": "TEAM.BA",
-      "señal": "VENTA",
-      "score": -106,
-      "confianza": 100,
-      "razón": "RSI(-106)",
-      "precio": 5470.0,
-      "cambio_pct": 1.02,
-      "rsi": 83.7,
-      "volumen": 11592,
-      "from_52w_high": -3.27,
-      "news_score": 0,
-      "sector": "QQQ"
-    },
-    {
       "ticker": "BOLT.BA",
       "señal": "VENTA",
       "score": -97,
@@ -2607,6 +2593,20 @@
       "from_52w_high": -10.0,
       "news_score": 0,
       "sector": "LOCAL_PURO"
+    },
+    {
+      "ticker": "ROKU.BA",
+      "señal": "VENTA",
+      "score": -95,
+      "confianza": 95,
+      "razón": "RSI(-95)",
+      "precio": 19190.0,
+      "cambio_pct": 0.37,
+      "rsi": 80.2,
+      "volumen": 222,
+      "from_52w_high": -1.24,
+      "news_score": 0,
+      "sector": "QQQ"
     },
     {
       "ticker": "HMY.BA",
@@ -2631,7 +2631,7 @@
       "precio": 25320.0,
       "cambio_pct": -2.39,
       "rsi": 77.1,
-      "volumen": 345353,
+      "volumen": 345373,
       "from_52w_high": -6.5,
       "news_score": 0,
       "sector": "QQQ"
@@ -2693,20 +2693,6 @@
       "sector": "XLE"
     },
     {
-      "ticker": "PATH.BA",
-      "señal": "VENTA",
-      "score": -73,
-      "confianza": 73,
-      "razón": "RSI(-73)",
-      "precio": 12300.0,
-      "cambio_pct": -2.15,
-      "rsi": 72.9,
-      "volumen": 5336,
-      "from_52w_high": -6.89,
-      "news_score": 0,
-      "sector": "QQQ"
-    },
-    {
       "ticker": "GRMN.BA",
       "señal": "VENTA",
       "score": -66,
@@ -2717,6 +2703,20 @@
       "rsi": 70.6,
       "volumen": 11,
       "from_52w_high": -5.73,
+      "news_score": 0,
+      "sector": "QQQ"
+    },
+    {
+      "ticker": "PANW.BA",
+      "señal": "VENTA",
+      "score": -62,
+      "confianza": 62,
+      "razón": "RSI(-62)",
+      "precio": 11770.0,
+      "cambio_pct": -2.08,
+      "rsi": 69.3,
+      "volumen": 3541,
+      "from_52w_high": -7.1,
       "news_score": 0,
       "sector": "QQQ"
     }
