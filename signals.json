@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-08-31T21:23:14.622680",
-  "generated_at_art": "2026-08-31 18:23:14",
+  "generated_at": "2026-08-31T21:43:10.921973",
+  "generated_at_art": "2026-08-31 18:43:10",
   "stats": {
     "total": 206,
     "compras": 36,
-    "ventas": 53,
-    "neutros": 90,
+    "ventas": 55,
+    "neutros": 88,
     "errores": 0,
     "compras_fuertes": 25,
-    "ventas_fuertes": 33
+    "ventas_fuertes": 35
   },
   "sector_counts": {
     "QQQ": {
@@ -30,9 +30,9 @@
     "XLE": {
       "COMPRA": 1,
       "COMPRA_DÉBIL": 0,
-      "NEUTRO": 7,
+      "NEUTRO": 6,
       "VENTA_DÉBIL": 4,
-      "VENTA": 3,
+      "VENTA": 4,
       "ERROR": 2
     },
     "XLV": {
@@ -86,9 +86,9 @@
     "LOCAL_ADR": {
       "COMPRA": 0,
       "COMPRA_DÉBIL": 1,
-      "NEUTRO": 9,
+      "NEUTRO": 8,
       "VENTA_DÉBIL": 1,
-      "VENTA": 2,
+      "VENTA": 3,
       "ERROR": 3
     },
     "LOCAL_PURO": {
@@ -1214,13 +1214,13 @@
     },
     {
       "ticker": "TGSU2.BA",
-      "señal": "NEUTRO",
-      "score": 0,
+      "señal": "VENTA",
+      "score": -50,
       "confianza": 50,
-      "razón": "RSI(0)",
+      "razón": "RSI(-50)",
       "precio": 9210.0,
       "cambio_pct": 2.22,
-      "rsi": 45.8,
+      "rsi": 65.3,
       "volumen": 163626,
       "from_52w_high": -13.93,
       "news_score": 0,
@@ -2025,7 +2025,7 @@
       "razón": "RSI(0)",
       "precio": 2161.0,
       "cambio_pct": 0.93,
-      "rsi": 46.2,
+      "rsi": 56.6,
       "volumen": 462464,
       "from_52w_high": -15.83,
       "news_score": 0,
@@ -2103,13 +2103,13 @@
     },
     {
       "ticker": "TGSU2.BA",
-      "señal": "NEUTRO",
-      "score": 0,
+      "señal": "VENTA",
+      "score": -50,
       "confianza": 50,
-      "razón": "RSI(0)",
+      "razón": "RSI(-50)",
       "precio": 9210.0,
       "cambio_pct": 2.22,
-      "rsi": 45.8,
+      "rsi": 65.3,
       "volumen": 163626,
       "from_52w_high": -13.93,
       "news_score": 0,
@@ -2410,7 +2410,7 @@
       "precio": 4400.0,
       "cambio_pct": -1.23,
       "rsi": 30.1,
-      "volumen": 4576,
+      "volumen": 3831,
       "from_52w_high": -26.05,
       "news_score": 0,
       "sector": "LOCAL_PURO"
@@ -2465,7 +2465,7 @@
       "razón": "RSI(0)",
       "precio": 3710.0,
       "cambio_pct": -2.37,
-      "rsi": 50.2,
+      "rsi": 44.3,
       "volumen": 2097,
       "from_52w_high": -25.8,
       "news_score": 0,
@@ -2480,7 +2480,7 @@
       "precio": 355.5,
       "cambio_pct": 2193.55,
       "rsi": null,
-      "volumen": 7716,
+      "volumen": 7687,
       "from_52w_high": -2.34,
       "news_score": 0,
       "sector": "LOCAL_PURO"
