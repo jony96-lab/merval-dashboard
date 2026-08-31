@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-31T20:35:38.116044",
-  "generated_at_art": "2026-08-31 17:35:38",
+  "generated_at": "2026-08-31T21:23:14.622680",
+  "generated_at_art": "2026-08-31 18:23:14",
   "stats": {
     "total": 206,
     "compras": 36,
@@ -1234,7 +1234,7 @@
       "razón": "RSI(0)",
       "precio": 2161.0,
       "cambio_pct": 0.93,
-      "rsi": 46.2,
+      "rsi": 56.6,
       "volumen": 462464,
       "from_52w_high": -15.83,
       "news_score": 0,
