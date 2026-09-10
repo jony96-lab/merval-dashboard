@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-10T21:16:47.175444",
-  "generated_at_art": "2026-09-10 18:16:47",
+  "generated_at": "2026-09-10T22:24:18.097105",
+  "generated_at_art": "2026-09-10 19:24:18",
   "stats": {
     "total": 206,
     "compras": 33,
@@ -1792,7 +1792,7 @@
       "cambio_pct": 0.09,
       "rsi": 22.6,
       "volumen": 18270,
-      "from_52w_high": -17.51,
+      "from_52w_high": -18.5,
       "news_score": 0,
       "sector": "EEM"
     },
@@ -2838,7 +2838,7 @@
       "cambio_pct": 0.09,
       "rsi": 22.6,
       "volumen": 18270,
-      "from_52w_high": -17.51,
+      "from_52w_high": -18.5,
       "news_score": 0,
       "sector": "EEM"
     },
