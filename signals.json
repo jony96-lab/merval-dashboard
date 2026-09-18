@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-18T22:26:39.419042",
-  "generated_at_art": "2026-09-18 19:26:39",
+  "generated_at": "2026-09-18T22:44:20.614514",
+  "generated_at_art": "2026-09-18 19:44:20",
   "stats": {
     "total": 206,
     "compras": 52,
@@ -1792,7 +1792,7 @@
       "cambio_pct": 1.32,
       "rsi": 32.6,
       "volumen": 10386,
-      "from_52w_high": -18.58,
+      "from_52w_high": -17.58,
       "news_score": 0,
       "sector": "EEM"
     },
